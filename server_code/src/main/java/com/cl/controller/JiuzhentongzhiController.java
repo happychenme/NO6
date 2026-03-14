@@ -6,6 +6,8 @@ import java.text.ParseException;
 import java.util.*;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.io.OutputStream;
+import javax.servlet.http.HttpServletResponse;
 
 import com.cl.utils.ValidatorUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -191,14 +193,102 @@ public class JiuzhentongzhiController {
         return R.ok();
     }
     
+    /**
+     * 手动重试通知
+     */
+    @RequestMapping("/manualRetry")
+    @SysLog("手动重试就诊通知")
+    public R manualRetry(@RequestBody Long id){
+        jiuzhentongzhiService.manualRetry(id);
+        return R.ok();
+    }
+    
+    /**
+     * 标记为已处理
+     */
+    @RequestMapping("/markAsHandled")
+    @SysLog("标记就诊通知为已处理")
+    public R markAsHandled(@RequestBody Long id){
+        jiuzhentongzhiService.markAsHandled(id);
+        return R.ok();
+    }
+    
+    /**
+     * 批量标记为已处理
+     */
+    @RequestMapping("/markBatchAsHandled")
+    @Transactional
+    @SysLog("批量标记就诊通知为已处理")
+    public R markBatchAsHandled(@RequestBody Long[] ids){
+        for(Long id : ids) {
+            jiuzhentongzhiService.markAsHandled(id);
+        }
+        return R.ok();
+    }
+    
+    /**
+     * 导出通知记录
+     */
+    @IgnoreAuth
+    @RequestMapping("/export")
+    @SysLog("导出就诊通知记录")
+    public void export(HttpServletRequest request, HttpServletResponse response, JiuzhentongzhiEntity jiuzhentongzhi) {
+        try {
+            String tableName = request.getSession().getAttribute("tableName").toString();
+            EntityWrapper<JiuzhentongzhiEntity> ew = new EntityWrapper<JiuzhentongzhiEntity>();
+            if(tableName.equals("yisheng")) {
+                jiuzhentongzhi.setYishengzhanghao((String)request.getSession().getAttribute("username"));
+            }
+            if(tableName.equals("yonghu")) {
+                jiuzhentongzhi.setZhanghao((String)request.getSession().getAttribute("username"));
+            }
+            List<JiuzhentongzhiEntity> list = jiuzhentongzhiService.selectList(MPUtil.sort(MPUtil.between(MPUtil.likeOrEq(ew, jiuzhentongzhi), null), null));
+            
+            response.setContentType("application/vnd.ms-excel");
+            response.setHeader("Content-Disposition", "attachment;filename=jiuzhentongzhi.xls");
+            OutputStream outputStream = response.getOutputStream();
+            
+            StringBuilder sb = new StringBuilder();
+            sb.append("通知编号\t");
+            sb.append("医生账号\t");
+            sb.append("电话\t");
+            sb.append("就诊时间\t");
+            sb.append("通知时间\t");
+            sb.append("账号\t");
+            sb.append("手机\t");
+            sb.append("通知类型\t");
+            sb.append("通知状态\t");
+            sb.append("重试次数\t");
+            sb.append("失败原因\t");
+            sb.append("通知备注\t");
+            sb.append("\n");
+            
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            for(JiuzhentongzhiEntity entity : list) {
+                sb.append(entity.getTongzhibianhao()).append("\t");
+                sb.append(entity.getYishengzhanghao()).append("\t");
+                sb.append(entity.getDianhua()).append("\t");
+                sb.append(entity.getJiuzhenshijian() != null ? sdf.format(entity.getJiuzhenshijian()) : "").append("\t");
+                sb.append(entity.getTongzhishijian() != null ? sdf.format(entity.getTongzhishijian()) : "").append("\t");
+                sb.append(entity.getZhanghao()).append("\t");
+                sb.append(entity.getShouji()).append("\t");
+                sb.append(entity.getTongzhileixing()).append("\t");
+                sb.append(entity.getZhuangtai()).append("\t");
+                sb.append(entity.getChongcishu()).append("\t");
+                sb.append(entity.getShibaiyuanyin()).append("\t");
+                sb.append(entity.getTongzhibeizhu()).append("\t");
+                sb.append("\n");
+            }
+            
+            outputStream.write(sb.toString().getBytes("UTF-8"));
+            outputStream.flush();
+            outputStream.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
 	
-
-
-
-
-
-
-
-
+	
 
 }

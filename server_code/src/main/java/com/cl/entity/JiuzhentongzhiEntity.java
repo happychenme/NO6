@@ -103,6 +103,64 @@ public class JiuzhentongzhiEntity<T> implements Serializable {
 					
 	private String tongzhibeizhu;
 	
+	/**
+	 * 通知类型：就诊前提醒、检查准备提醒等
+	 */
+					
+	private String tongzhileixing;
+	
+	/**
+	 * 通知状态：待发送、发送中、发送成功、发送失败、已处理
+	 */
+					
+	private String zhuangtai;
+	
+	/**
+	 * 重试次数
+	 */
+					
+	private Integer chongcishu;
+	
+	/**
+	 * 最大重试次数
+	 */
+					
+	private Integer maxChongcishu;
+	
+	/**
+	 * 失败原因
+	 */
+					
+	private String shibaiyuanyin;
+	
+	/**
+	 * 下次重试时间
+	 */
+				
+	@JsonFormat(locale="zh", timezone="GMT+8", pattern="yyyy-MM-dd HH:mm:ss")
+	@DateTimeFormat 		
+	private Date xiaciChongshishijian;
+	
+	/**
+	 * 最后发送时间
+	 */
+				
+	@JsonFormat(locale="zh", timezone="GMT+8", pattern="yyyy-MM-dd HH:mm:ss")
+	@DateTimeFormat 		
+	private Date lastFasongshijian;
+	
+	/**
+	 * 预约ID，关联预约记录
+	 */
+					
+	private Long yuyueId;
+	
+	/**
+	 * 是否已读
+	 */
+					
+	private Integer isRead;
+	
 
 	@JsonFormat(locale="zh", timezone="GMT+8", pattern="yyyy-MM-dd HH:mm:ss")
 	@DateTimeFormat
@@ -216,6 +274,114 @@ public class JiuzhentongzhiEntity<T> implements Serializable {
 	 */
 	public String getTongzhibeizhu() {
 		return tongzhibeizhu;
+	}
+	/**
+	 * 设置：通知类型
+	 */
+	public void setTongzhileixing(String tongzhileixing) {
+		this.tongzhileixing = tongzhileixing;
+	}
+	/**
+	 * 获取：通知类型
+	 */
+	public String getTongzhileixing() {
+		return tongzhileixing;
+	}
+	/**
+	 * 设置：通知状态
+	 */
+	public void setZhuangtai(String zhuangtai) {
+		this.zhuangtai = zhuangtai;
+	}
+	/**
+	 * 获取：通知状态
+	 */
+	public String getZhuangtai() {
+		return zhuangtai;
+	}
+	/**
+	 * 设置：重试次数
+	 */
+	public void setChongcishu(Integer chongcishu) {
+		this.chongcishu = chongcishu;
+	}
+	/**
+	 * 获取：重试次数
+	 */
+	public Integer getChongcishu() {
+		return chongcishu;
+	}
+	/**
+	 * 设置：最大重试次数
+	 */
+	public void setMaxChongcishu(Integer maxChongcishu) {
+		this.maxChongcishu = maxChongcishu;
+	}
+	/**
+	 * 获取：最大重试次数
+	 */
+	public Integer getMaxChongcishu() {
+		return maxChongcishu;
+	}
+	/**
+	 * 设置：失败原因
+	 */
+	public void setShibaiyuanyin(String shibaiyuanyin) {
+		this.shibaiyuanyin = shibaiyuanyin;
+	}
+	/**
+	 * 获取：失败原因
+	 */
+	public String getShibaiyuanyin() {
+		return shibaiyuanyin;
+	}
+	/**
+	 * 设置：下次重试时间
+	 */
+	public void setXiaciChongshishijian(Date xiaciChongshishijian) {
+		this.xiaciChongshishijian = xiaciChongshishijian;
+	}
+	/**
+	 * 获取：下次重试时间
+	 */
+	public Date getXiaciChongshishijian() {
+		return xiaciChongshishijian;
+	}
+	/**
+	 * 设置：最后发送时间
+	 */
+	public void setLastFasongshijian(Date lastFasongshijian) {
+		this.lastFasongshijian = lastFasongshijian;
+	}
+	/**
+	 * 获取：最后发送时间
+	 */
+	public Date getLastFasongshijian() {
+		return lastFasongshijian;
+	}
+	/**
+	 * 设置：预约ID
+	 */
+	public void setYuyueId(Long yuyueId) {
+		this.yuyueId = yuyueId;
+	}
+	/**
+	 * 获取：预约ID
+	 */
+	public Long getYuyueId() {
+		return yuyueId;
+	}
+	/**
+	 * 设置：是否已读
+	 */
+	public void setIsRead(Integer isRead) {
+		this.isRead = isRead;
+	}
+	/**
+	 * 获取：是否已读
+	 */
+	public Integer getIsRead() {
+		return isRead;
 	}
 
 }

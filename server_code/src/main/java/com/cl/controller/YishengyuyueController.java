@@ -28,6 +28,7 @@ import com.cl.entity.YishengyuyueEntity;
 import com.cl.entity.view.YishengyuyueView;
 
 import com.cl.service.YishengyuyueService;
+import com.cl.service.JiuzhentongzhiService;
 import com.cl.service.TokenService;
 import com.cl.utils.PageUtils;
 import com.cl.utils.R;
@@ -47,6 +48,8 @@ import com.cl.utils.CommonUtil;
 public class YishengyuyueController {
     @Autowired
     private YishengyuyueService yishengyuyueService;
+    @Autowired
+    private JiuzhentongzhiService jiuzhentongzhiService;
 
 
 
@@ -174,6 +177,10 @@ public class YishengyuyueController {
     public R update(@RequestBody YishengyuyueEntity yishengyuyue, HttpServletRequest request){
         //ValidatorUtils.validateEntity(yishengyuyue);
         yishengyuyueService.updateById(yishengyuyue);//全部更新
+
+        if("是".equals(yishengyuyue.getSfsh())) {
+                jiuzhentongzhiService.createNotificationsForAppointment(yishengyuyue);
+            }
         return R.ok();
     }
 
@@ -190,6 +197,10 @@ public class YishengyuyueController {
             yishengyuyue.setSfsh(sfsh);
             yishengyuyue.setShhf(shhf);
             list.add(yishengyuyue);
+            
+            if("是".equals(sfsh)) {
+                jiuzhentongzhiService.createNotificationsForAppointment(yishengyuyue);
+            }
         }
         yishengyuyueService.updateBatchById(list);
         return R.ok();
